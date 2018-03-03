@@ -1,12 +1,7 @@
 const J = require('../server.js')
-
+const R = require('../router.js')
 
 console.log(J)
 
-const opts = {
-	'user' : '/user',
-	'item' : '/item'
-}
-
-const server = new J(opts)
+const server = new J(new R())
 server.start(12)

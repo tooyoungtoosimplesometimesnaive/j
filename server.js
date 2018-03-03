@@ -1,14 +1,13 @@
 const http = require('http')
-const router = require('./router.js')
 
 module.exports = class _server {
-	constructor(opts) {
-		this.router = new router(opts)
-		this.router.register(this)
+	constructor(_routes) {
+		this.routes = _routes
 	}
 	start(portNumber) {
 		const server = http.createServer((req, res) => {
 			console.log(req.url)
+			console.log(req.method)
 			res.writeHead(200, {'Content-Type': 'text/plain' })
 			res.end('OK')
 		})
@@ -17,6 +16,7 @@ module.exports = class _server {
 			console.log('Listening at 8888')
 		})
 	}
+
 }
 
 
