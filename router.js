@@ -9,6 +9,10 @@ module.exports = class router {
 	}
 
 	request(method, endpoint, callback) {
+		this.routes[endpoint] = {
+			method,
+			callback
+		}
 	}
 }
 
