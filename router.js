@@ -1,6 +1,10 @@
+const Parser = require('./util/urlParser.js')
+
 module.exports = class router {
 	constructor() {
 		this.routes = {
+			'GET': [],
+			'POST': []
 		}
 	}
 
@@ -9,10 +13,12 @@ module.exports = class router {
 	}
 
 	request(method, endpoint, callback) {
-		this.routes[endpoint] = {
-			method,
+		const r = Parser.register(endpoint)
+
+		this.routes[method].push({
+			...r,
 			callback
-		}
+		})
 	}
 }
 
