@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const http = require('http')
 const Parser = require('./util/urlParser.js')
 
@@ -50,6 +52,20 @@ module.exports = class _server {
 	}
 
 	static serveStatic(dir) {
+		const staticFiles = []
+		function walk(d) {
+			if (!fs.lstatSync(d).isDirectory()) {
+				console.log(d)
+				staticFiles.push({
+					path: d,
+				})
+				return
+			}
+			for (const _d of fs.readdirSync(d)) {
+				walk(path.join(d, _d))
+			}
+		}
+		walk(dir)
 		return function(ctx) {
 		}
 	}
