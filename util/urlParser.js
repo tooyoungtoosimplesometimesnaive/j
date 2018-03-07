@@ -29,8 +29,13 @@ class urlParser {
 			
 				urlRegexPattern += '[a-zA-Z0-9].*/'
 			} else {
-				generalizedUrl += (p + '/')
-				urlRegexPattern += (p + '/')
+				if (p.indexOf('.') > 0) {
+					generalizedUrl += p
+					urlRegexPattern += p
+				} else {
+					generalizedUrl += (p + '/')
+					urlRegexPattern += (p + '/')
+				}
 				path.push({
 					name: p,
 					value: p,

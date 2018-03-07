@@ -8,6 +8,18 @@ module.exports = class router {
 		}
 	}
 
+	use(endpoint, files) {
+		for (const f of files) {
+
+			this.get(endpoint + f.relativePath, function(ctx) {
+				ctx.contentType = f.contentType
+				ctx.isFile = true
+				ctx.filePath = f.absolutePath
+			})
+
+		}
+	}
+
 	get(endpoint, callback) {
 		this.request('GET', endpoint, callback)
 	}

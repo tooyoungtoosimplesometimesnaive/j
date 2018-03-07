@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const http = require('http')
 const Parser = require('./util/urlParser.js')
+const FileExtensions= require('./util/fileExtensions.js')
 
 module.exports = class _server {
 	constructor(_router) {
@@ -46,18 +47,34 @@ module.exports = class _server {
 			}
 
 			endPoint['callback'](context)
-			res.writeHead(200, {'Content-Type': 'text/plain'})
-			res.end(context.body)
+
+			if (context.isFile) {
+				const fileStream = fs.createReadStream(context.filePath)
+				fileStream.pipe(res)
+			} else {
+				res.writeHead(200, {'Content-Type': 'text/plain'})
+				res.end(context.body)
+			}
 		})
 	}
 
 	static serveStatic(dir) {
+		function matchType(d) {
+			for (const t of Object.keys(FileExtensions)) {
+				if (d.match(FileExtensions[t]['regex'])) {
+					return FileExtensions[t]['contentType']
+				}
+			}
+			return 'text/plain'
+		}
 		const staticFiles = []
 		function walk(d) {
 			if (!fs.lstatSync(d).isDirectory()) {
 				console.log(d)
 				staticFiles.push({
-					path: d,
+					absolutePath: d,
+					relativePath: path.relative(__dirname, d),
+					contentType: matchType(d)
 				})
 				return
 			}
@@ -66,8 +83,8 @@ module.exports = class _server {
 			}
 		}
 		walk(dir)
-		return function(ctx) {
-		}
+		console.log(staticFiles)
+		return staticFiles
 	}
 
 	start(portNumber) {

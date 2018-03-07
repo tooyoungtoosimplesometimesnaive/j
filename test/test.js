@@ -11,6 +11,7 @@ router.get('/user/:id', (ctx) => {
 	ctx.body = `Hello this is user ${ctx.pathParam.id} page, with a=${ctx.queryParam.a}`
 })
 
+router.use('/', J.serveStatic('./static'))
 
 const server = new J(router)
 server.start(8888)
